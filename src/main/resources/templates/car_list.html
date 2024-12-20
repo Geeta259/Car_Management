@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car List</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-4">
+        <h1>Car List</h1>
+
+        <!-- Filter Search Form -->
+        <div class="card mt-4">
+            <div class="card-header">
+                <h4>Search and Filter Cars</h4>
+            </div>
+            <div class="card-body">
+                <form th:action="@{/cars/filter/0}" th:method="get" class="row g-3">
+                    <div class="col-md-4">
+                        <label for="filterName" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="filterName" name="name" 
+                               th:value="${name}" placeholder="Enter car name">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="filterModel" class="form-label">Model</label>
+                        <input type="text" class="form-control" id="filterModel" name="model" 
+                               th:value="${model}" placeholder="Enter car model">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="filterYear" class="form-label">Year</label>
+                        <input type="number" class="form-control" id="filterYear" name="year" 
+                               th:value="${year}" placeholder="Enter car year">
+                    </div>
+                    <div class="col-md-12 text-end">
+                        <button type="submit" class="btn btn-primary">Search</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Car Table (Only show if cars are available) -->
+        <div class="card mt-4" th:if="${cars != null and #lists.size(cars.content) > 0}">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h4>List of Cars</h4>
+                <!-- View All Button -->
+                <a th:href="@{/cars/0}" class="btn btn-secondary btn-sm">View All</a>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Model</th>
+                            <th>Year</th>
+                            <th>Price</th>
+                            <th>Color</th>
+                            <th>Fuel Type</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="car : ${cars.content}">
+                            <td th:text="${car.id}"></td>
+                            <td th:text="${car.name}"></td>
+                            <td th:text="${car.model}"></td>
+                            <td th:text="${car.year}"></td>
+                            <td th:text="${car.price}"></td>
+                            <td th:text="${car.color}"></td>
+                            <td th:text="${car.fuelType}"></td>
+                            <td>
+                                <a th:href="@{/cars/edit/{id}(id=${car.id})}" class="btn btn-warning btn-sm">Update</a>
+                                <a th:href="@{/cars/delete/{id}(id=${car.id})}" class="btn btn-danger btn-sm">Delete</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <!-- Pagination Controls -->
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                        <li th:if="${currentPage != 0}" class="page-item">
+                            <a class="page-link" th:href="@{'/filter/' + ${currentPage - 1}}">Previous</a>
+                        </li>
+                        <li th:each="i : ${#numbers.sequence(1, totalPages)}"
+                            th:classappend="${currentPage == i - 1 ? 'active' : ''}" class="page-item">
+                            <a class="page-link" th:href="@{'/filter/' + ${i - 1}}">
+                                <span th:text="${i}"></span>
+                            </a>
+                        </li>
+                        <li th:if="${currentPage != totalPages - 1}" class="page-item">
+                            <a class="page-link" th:href="@{'/filter/' + ${currentPage + 1}}">Next</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+
+        <!-- No Cars Found Message -->
+        <div class="alert alert-warning mt-4" th:if="${cars == null or #lists.size(cars.content) == 0}">
+            <strong>No cars found</strong> matching your search criteria.
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
