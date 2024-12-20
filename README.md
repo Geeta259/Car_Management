@@ -106,3 +106,7 @@ Swagger UI is available for interacting with the APIs and viewing their specific
 - **URL:** [http://localhost:8081/swagger-ui/index.html](http://localhost:8081/swagger-ui/index.html)
 
 ---
+
+
+https://github.com/user-attachments/assets/fb01ca03-12d0-4b13-8dcf-e4237a3c0a06
+
